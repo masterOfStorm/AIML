@@ -1,0 +1,52 @@
+Program 5: 
+A) Partitioning k-means clustering technique on ch1ex1 dataset with different K (number 
+of clusters) as input and record the output. 
+
+import pandas as pd
+df = pd.read_csv('ch1ex1.csv')
+points = df.values
+from sklearn.cluster import KMeans
+model = KMeans(n_clusters=3)
+model.fit(points)
+labels = model.predict(points)
+import matplotlib.pyplot as plt
+xs = points[:,0]
+ys = points[:,1]
+plt.scatter(xs, ys, c=labels)
+plt.show()
+
+
+centroids = model.cluster_centers_
+centroids_x = centroids[:,0]
+centroids_y = centroids[:,1]
+plt.scatter(xs, ys, c=labels)
+plt.scatter(centroids_x, centroids_y, marker='X', s=200)
+plt.show()
+
+
+
+
+B) Hierarchical Clustering Algorithm on seeds_less_rows dataset for extracting cluster 
+labels of different varieties of seeds 
+
+
+import pandas as pd
+seeds_df = pd.read_csv('seeds-less-rows.csv')
+varieties = list(seeds_df.pop('grain_variety'))
+samples = seeds_df.values
+from scipy.cluster.hierarchy import linkage, dendrogram
+import matplotlib.pyplot as plt
+mergings = linkage(samples, method='complete')
+dendrogram(mergings,
+           labels=varieties,
+           leaf_rotation=90,
+           leaf_font_size=8,
+)
+plt.show()
+
+
+from scipy.cluster.hierarchy import fcluster
+labels = fcluster(mergings, 6, criterion='distance')
+df = pd.DataFrame({'labels': labels, 'varieties': varieties})
+ct = pd.crosstab(df['labels'], df['varieties'])
+ct

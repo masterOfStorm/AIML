@@ -1,0 +1,138 @@
+Program 1 :
+
+A)Simple linear regression model for headBrain dataset and predict brain weight 
+based on head size using the least square method. 
+Find out 
+i.R^2 score for the predicted model 
+ii.Display the all the data points along with the fit model
+
+import numpy as np 
+import pandas as pd 
+importmatplotlib.pyplot as plt 
+
+
+data = pd.read_csv('headbrain.csv') 
+print(data.shape) 
+data.head() 
+
+X = data['Head Size(cm^3)'].values 
+Y = data['Brain Weight(grams)'].values 
+# Calculating coefficient 
+
+mean_x = np.mean(X) 
+mean_y = np.mean(Y) 
+ 
+print(mean_x) 
+print(mean_y) 
+
+n = len(X) 
+print(n) 
+
+numer = 0 
+denom = 0 
+for i in range(n): 
+numer += (X[i] - mean_x) * (Y[i] - mean_y) 
+denom += (X[i] - mean_x) ** 2 
+b1 = numer / denom 
+b0 = mean_y - (b1 * mean_x) 
+
+print("Coefficients") 
+print(b1, b0) 
+ 
+max_x = np.max(X) + 100 
+min_x = np.min(X) - 100 
+
+x = np.linspace(min_x, max_x, 1000) 
+y = b0 + b1 * x 
+
+plt.plot(x, y, color='#58b970', label='Regression Line') 
+
+plt.scatter(X, Y, c='#ef5423', label='Scatter Plot') 
+plt.xlabel('Head Size in cm3') 
+plt.ylabel('Brain Weight in grams') 
+plt.legend() 
+plt.show() 
+
+ss_tot = 0 
+ss_res = 0 
+for i in range(n): 
+y_pred = b0 + b1 * X[i] 
+ss_tot += (Y[i] - mean_y) ** 2 
+ss_res += (Y[i] - y_pred) ** 2 
+r2 = 1 - (ss_res/ss_tot) 
+print("R2 Score") 
+print(r2) 
+
+
+B)Simple linear regression model for housing_prices_SLR dataset and predict house 
+price based on the area of the house using the library scikit_learn. 
+Find out 
+i.Analyze the R^2score of predicted training and test models score. 
+ii.Display the all the data points along with fit model
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+%matplotlib  inline
+df= pd.read_csv?
+df= pd.read_csv
+help(pd.read_csv)
+df=pd.read_csv("housing_prices_SLR.csv",delimiter=',')
+df.head()
+df.AREA
+
+df.PRICE
+
+plt.scatter(df.AREA,df.PRICE,c='blue')
+plt.show()
+
+plt.scatter(df.AREA,df.PRICE,c=np.random.random(df.shape[0]))
+plt.show()
+
+df.shape
+col=np.random.random(df.shape[0])
+col
+
+
+plt.scatter(df.AREA,df.PRICE,c=col,s=4)
+plt.show()
+
+x=df[['AREA']].values
+y=df.PRICE.values
+
+
+x[:5]
+y[:5]
+
+print(x[:5]) 
+print(y[:5])
+
+
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2,random_state=100)
+print(x_train.shape)
+print(x_test.shape)
+print(x_train.shape)
+print(x_test.shape)
+
+
+from sklearn.linear_model import LinearRegression
+lr_model= LinearRegression()
+lr_model.fit(x_train,y_train)
+print(lr_model.intercept_)
+print(lr_model.coef_)
+lr_model=LinearRegression(fit_intercept= False)
+lr_model.fit(x_train,y_train)lr_model.fit(x_train,y_train)
+print(lr_model.intercept_) 
+print(lr_model.coef_)
+
+lr_model.predict(np.array([[2000],[2500]]))
+from sklearn.metrics import r2_score
+y_train
+lr_model.predict(x_train)
+r2_score(y_train,lr_model.predict(x_train))
+r2_score(y_test,lr_model.predict(x_test))
+lr_model.score(x_test,y_test)
+plt.scatter(x_train[:,0],y_train,c='red')
+plt.scatter(x_test[:,0],y_test,c='blue')
+plt.plot(x_train[:,0],lr_model.predict(x_train),c='y')

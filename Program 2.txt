@@ -1,0 +1,123 @@
+Program 2:
+
+A)Multiple linear regression model for student dataset and predict writing skill of 
+student based on the math skill and reading skill of the student using the 
+Gradient descent method.Find out R2 score for the predicted model.
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+data = pd.read_csv('student.csv')
+print(data.shape)
+data.head()
+
+math = data['Math'].values
+read = data['Reading'].values
+write = data['Writing'].values
+fig = plt.figure()
+ax = Axes3D(fig)
+ax.scatter(math, read, write, color='#ef1234')
+plt.show()
+
+
+m = len(math)
+x0 = np.ones(m)
+X = np.array([x0, math, read]).T
+B = np.array([0, 0, 0])
+Y = np.array(write)
+alpha = 0.0001
+def cost_function(X, Y, B):
+    m = len(Y)
+    J = np.sum((X.dot(B) - Y) ** 2)/(2 * m)
+    return J
+
+inital_cost = cost_function(X, Y, B)
+print("Initial Cost")
+print(inital_cost)
+
+def gradient_descent(X, Y, B, alpha, iterations):
+    cost_history = [0] * iterations
+    m = len(Y)
+    
+    for iteration in range(iterations):
+        # Hypothesis Values
+        h = X.dot(B)
+        # Difference b/w Hypothesis and Actual Y
+        loss = h - Y
+        # Gradient Calculation
+        gradient = X.T.dot(loss) / m
+        # Changing Values of B using Gradient
+        B = B - alpha * gradient
+        # New Cost Value
+        cost = cost_function(X, Y, B)
+        cost_history[iteration] = cost
+        
+    return B, cost_history
+
+# 100000 Iterations
+newB, cost_history = gradient_descent(X, Y, B, alpha, 100000)
+
+# New Values of B
+print("New Coefficients")
+print(newB)
+
+# Final Cost of new B
+print("Final Cost")
+print(cost_history[-1])
+
+
+
+def rmse(Y, Y_pred):
+    rmse = np.sqrt(sum((Y - Y_pred) ** 2) / len(Y))
+    return rmse
+# Model Evaluation - R2 Score
+def r2_score(Y, Y_pred):
+    mean_y = np.mean(Y)
+    ss_tot = sum((Y - mean_y) ** 2)
+    ss_res = sum((Y - Y_pred) ** 2)
+    r2 = 1 - (ss_res / ss_tot)
+    return r2
+
+Y_pred = X.dot(newB)
+
+#print("RMSE")
+#print(rmse(Y, Y_pred))
+print("R2 Score")
+print(r2_score(Y, Y_pred))
+
+
+
+B)Multiple linear regression model for housing_prices dataset and predict house price 
+based on the area, floor and room size of the house using the library scikit_learn. Find 
+out the accuracy of the model using R2 score statistics for the predicted model. 
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+%matplotlib  inline
+df=pd.read_csv("housing_prices.csv")
+df
+df=df.iloc[:,[0,1,2,4]]
+df.head()
+x=df.iloc[:,:3].values
+y=df.iloc[:,3].values
+print(x[:5])
+print(y[:5])
+
+
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2,random_state=100)
+print(x_train.shape)
+print(x_test.shape)
+print(x_train.shape)
+print(x_test.shape)
+
+from sklearn.linear_model import LinearRegression
+mlr_model= LinearRegression(fit_intercept=True)
+mlr_model.fit(x_train,y_train)
+print(mlr_model.intercept_) # (PRICE=(-4481.80028058845)+8.65903854)*AREA
+print(mlr_model.coef_)#y=c+mx
+print(mlr_model.score(x_train,y_train))
+print(mlr_model.score(x_test,y_test))
+
